@@ -36,7 +36,7 @@ exports.getCommentsByPost = (req,res) =>{
       return res.status(404).send('Post not Found');
     } 
       return res.status(200).send(post)
- }).catch(err => errorHandler(error,req,res));
+ }).catch(err => errorHandler(err,req,res));
 
 }
 

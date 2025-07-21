@@ -55,3 +55,15 @@ module.exports.loginUser = (req,res) =>{
         return res.status(400).send({message: "Invalid email"})
     }
 }
+
+module.exports.getUserDetails = (req, res) => {
+ 
+  User.findById(req.user.id)
+    .select('-password') // exclude password
+    .then(user => {
+      if (!user) return res.status(404).send({ message: "User not found" });
+
+      res.status(200).send({ user });
+    })
+    .catch(err => errorHandler(err, req, res));
+};

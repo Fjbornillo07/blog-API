@@ -27,7 +27,7 @@ exports.getAllPosts = async (req, res) => {
         path: "comments", // virtual field
         populate: {
           path: "author",
-          select: "username email"
+          select: "username email _id"
         }
       })
       .exec(); // ensures virtuals are populated

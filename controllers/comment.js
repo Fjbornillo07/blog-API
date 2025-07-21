@@ -1,4 +1,6 @@
 const Comment = require('../models/Comment');
+const auth = require('../auth');
+const {errorHandler} = auth;
 
 // Add a comment to a post
 exports.addComment = async (req, res) => {
@@ -28,17 +30,24 @@ exports.addComment = async (req, res) => {
   }
 };
 
-// Get comments for a specific post
-exports.getCommentsByPost = (req,res) =>{
+ // Get comments for a specific post
+exports.getCommentsByPost = async (req, res) => {
+  try {
+    const { postId } = req.params;
 
- Comment.findById(req.params.postId).then(post => {
-    if(!post){
-      return res.status(404).send('Post not Found');
-    } 
-      return res.status(200).send(post)
- }).catch(err => errorHandler(err,req,res));
+    const comments = await Comment.find({ post: postId })
+      .populate("author", "username email")
+      .sort({ createdAt: -1 });
 
-}
+    res.status(200).json({
+      message: "Comments retrieved successfully",
+      comments,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 
 // Retrieve all comments 
